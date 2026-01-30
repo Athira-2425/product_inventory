@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Inventory</h2>
+
+<p><b>Low stock products:</b> {{ low_stock_count }}</p>
+
+<form method="GET" class="filter-bar">
+    <input type="text" name="search" placeholder="Search by name or SKU..." value="{{ search }}">
+    <select name="category" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+            <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>
+                {{ cat }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>SKU</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for product in page_obj %}
+    <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.sku }}</td>
+        <td>{{ product.category }}</td>
+        <td>₹{{ product.price }}</td>
+
+        <td class="{% if product.stock < 10 %}stock-low{% endif %}">
+            {{ product.stock }}
+        </td>
+
+        <td>
+            {% if product.stock == 0 %}
+                <span class="badge badge-out">Out</span>
+            {% elif product.stock < 10 %}
+                <span class="badge badge-low">Low</span>
+            {% else %}
+                <span class="badge badge-ok">In</span>
+            {% endif %}
+        </td>
+
+        <td class="actions-cell">
+            <a class="btn btn-view" href="{% url 'detail' product.pk %}">View</a>
+            <a class="btn btn-edit" href="{% url 'edit' product.pk %}">Edit</a>
+            <a class="btn btn-delete" href="{% url 'delete' product.pk %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1&search={{ search }}&category={{ selected_category }}">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&category={{ selected_category }}">Prev</a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&category={{ selected_category }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}&search={{ search }}&category={{ selected_category }}">Last</a>
+    {% endif %}
+</div>
+
+{% endblock %}
+

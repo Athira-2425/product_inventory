@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="form-card">
+    <h2>
+        {% if form.instance.pk %}
+            Edit Product
+        {% else %}
+            Add Product
+        {% endif %}
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">Save</button>
+            <a href="{% url 'home' %}" class="btn btn-view">Back</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="form-card">
+    <h2>Confirm Delete</h2>
+    <p>Are you sure you want to delete <b>{{ product.name }}</b>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-delete">Yes, Delete</button>
+        <a href="{% url 'home' %}" class="btn btn-view">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}
+
