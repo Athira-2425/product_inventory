@@ -62,7 +62,7 @@ def edit_product(request, pk):
     form = ProductForm(request.POST or None, instance=product)
     if form.is_valid():
         form.save()
-        messages.success(request, 'Product updated successfully')
+        messages.info(request, 'Product updated successfully')
         return redirect('home')
     return render(request, 'forms.html', {'form': form})
 
@@ -71,7 +71,7 @@ def delete_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
         product.delete()
-        messages.success(request, 'Product deleted successfully')
+        messages.error(request, 'Product deleted successfully')
         return redirect('home')
     return render(request, 'delete.html', {'product': product})
 
